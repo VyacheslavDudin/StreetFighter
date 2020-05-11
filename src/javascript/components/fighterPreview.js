@@ -1,4 +1,5 @@
 import { createElement } from '../helpers/domHelper';
+import { fighters } from '../helpers/mockData';
 
 export function createFighterPreview(fighter, position) {
   const positionClassName = position === 'right' ? 'fighter-preview___right' : 'fighter-preview___left';
@@ -7,7 +8,22 @@ export function createFighterPreview(fighter, position) {
     className: `fighter-preview___root ${positionClassName}`,
   });
 
-  // todo: show fighter info (image, name, health, etc.)
+  if(fighter){
+    const imgElement = createFighterImage(fighter);
+    const {name, health, attack, defense} = fighter;
+    const divFighterInfo = createElement({tagName:'div', className:"fighter-preview__info"}); 
+    divFighterInfo.innerHTML=`
+        <span>Name: ${name}</span>
+        <span>Health: ${health}</span>
+        <span>Attack: ${attack}</span>
+        <span>Defense: ${defense}</span>
+      </div>
+    `;
+    fighterElement.appendChild(imgElement);
+    fighterElement.appendChild(divFighterInfo);
+  }
+  
+
 
   return fighterElement;
 }
