@@ -35,4 +35,4 @@ function getFighterById(endpoint) {
   return fightersDetails.find((it) => it._id === id);
 }
 
-export { callApi };
+export { callApi, getFighterById };
