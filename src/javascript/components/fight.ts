@@ -1,15 +1,18 @@
+import { fighterType } from './../../../customTypes';
 import { controls } from '../../constants/controls';
 
-export async function fight(_firstFighter, _secondFighter) {  
+type fighterTypeWithNumber = fighterType & {number?: 'First' | 'Second'};
+
+export async function fight(_firstFighter: fighterType, _secondFighter: fighterType): Promise<fighterTypeWithNumber> {  
   return new Promise((resolve) => {
-    const COMBO_COOLDOWN = 10000;
+    const COMBO_COOLDOWN: number = 10000;
     //For fixing error while fighters are identical, and they are references on the same object
-    const firstFighter = {..._firstFighter};
-    const secondFighter = {..._secondFighter};
-    let pressed = new Set();
+    const firstFighter: fighterTypeWithNumber = {..._firstFighter};
+    const secondFighter: fighterTypeWithNumber = {..._secondFighter};
+    let pressed: Set<string> = new Set();
     let controlKeys = new Set(Object.values(controls).flat());
-    const comboKeysPressed = comboKeys => comboKeys.every(key => pressed.has(key));
-    const isBlocking = blockKey => pressed.has(blockKey);
+    const comboKeysPressed = (comboKeys: string[]) => comboKeys.every(key => pressed.has(key));
+    const isBlocking = (blockKey: string) => pressed.has(blockKey);
     let {
           PlayerOneCriticalHitCombination: hitCritComb1,
           PlayerTwoCriticalHitCombination: hitCritComb2,
@@ -18,12 +21,12 @@ export async function fight(_firstFighter, _secondFighter) {
           PlayerTwoAttack: playerTwoAttack,
           PlayerTwoBlock: playerTwoBlock,
         } = controls;
-    const healthBarLeft = document.getElementById('left-fighter-indicator');
-    const healthBarRight = document.getElementById('right-fighter-indicator');
+    const healthBarLeft = document.getElementById('left-fighter-indicator')!;
+    const healthBarRight = document.getElementById('right-fighter-indicator')!;
     const maxHealthFighterOne = firstFighter.health;
     const maxHealthFighterTwo = secondFighter.health;
 
-    function keyDownListener(event) {
+    function keyDownListener(event: KeyboardEvent) {
       if(controlKeys.has(event.code)){
         pressed.add(event.code);
       }
@@ -96,7 +99,7 @@ export async function fight(_firstFighter, _secondFighter) {
         resolve(firstFighter);
       }
     };
-    function keyUpListener(event) {
+    function keyUpListener(event: KeyboardEvent) {
       if(!pressed.has(event.code))
         return;
       pressed.delete(event.code);
@@ -118,24 +121,24 @@ export async function fight(_firstFighter, _secondFighter) {
   });
 }
 
-export function getDamage(attacker, defender) {
+export function getDamage(attacker: fighterType, defender: fighterType) {
   let dealedDamage = getHitPower(attacker) - getBlockPower(defender);
   return dealedDamage >= 0
   ? dealedDamage
   : 0;
 }
 
-export function getHitPower(fighter) {
+export function getHitPower(fighter: fighterType) {
   let criticalHitChance = getRandomInRange(1, 2);
   return fighter.attack * criticalHitChance;
 }
 
-export function getBlockPower(fighter) {
+export function getBlockPower(fighter: fighterType) {
   let dodgeChance = getRandomInRange(1, 2);
   return fighter.defense * dodgeChance;
 }
 
-export function reduceHealth({health}, damage, healthBar, maxHealth) {
+export function reduceHealth({health}: {health: number}, damage: number, healthBar: HTMLElement, maxHealth: number) {
   let damagedHealth = (health - damage) > 0
     ? (health - damage)
     : 0;
@@ -143,4 +146,4 @@ export function reduceHealth({health}, damage, healthBar, maxHealth) {
   return damagedHealth;
 }
 
-export const getRandomInRange = (start, end) => (end - start) * Math.random() + start;
+export const getRandomInRange = (start: number, end: number): number => (end - start) * Math.random() + start;
