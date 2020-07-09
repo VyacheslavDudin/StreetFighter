@@ -1,11 +1,12 @@
+import { fighterType, twoFighters } from '../../../customTypes';
 import { createElement } from '../helpers/domHelper';
 import { createFighterImage } from './fighterPreview';
 import { fight } from './fight';
 import { showWinnerModal } from "./modal/winner";
 
-export async function renderArena(selectedFighters) {
-  const root = document.getElementById('root');
-  const arena = createArena(selectedFighters);
+export async function renderArena(selectedFighters: twoFighters) {
+  const root = document.getElementById('root')!;
+  const arena: HTMLElement = createArena(selectedFighters);
 
   root.innerHTML = '';
   root.append(arena);
@@ -14,7 +15,7 @@ export async function renderArena(selectedFighters) {
   showWinnerModal(winner);
 }
 
-function createArena(selectedFighters) {
+function createArena(selectedFighters: [fighterType, fighterType]) {
   const arena = createElement({ tagName: 'div', className: 'arena___root' });
   const healthIndicators = createHealthIndicators(...selectedFighters);
   const fighters = createFighters(...selectedFighters);
@@ -23,7 +24,7 @@ function createArena(selectedFighters) {
   return arena;
 }
 
-function createHealthIndicators(leftFighter, rightFighter) {
+function createHealthIndicators(leftFighter: fighterType, rightFighter: fighterType) {
   const healthIndicators = createElement({ tagName: 'div', className: 'arena___fight-status' });
   const versusSign = createElement({ tagName: 'div', className: 'arena___versus-sign' });
   const leftFighterIndicator = createHealthIndicator(leftFighter, 'left');
@@ -33,7 +34,7 @@ function createHealthIndicators(leftFighter, rightFighter) {
   return healthIndicators;
 }
 
-function createHealthIndicator(fighter, position) {
+function createHealthIndicator(fighter: fighterType, position: 'left' | 'right') {
   const { name } = fighter;
   const container = createElement({ tagName: 'div', className: 'arena___fighter-indicator' });
   const fighterName = createElement({ tagName: 'span', className: 'arena___fighter-name' });
@@ -47,7 +48,7 @@ function createHealthIndicator(fighter, position) {
   return container;
 }
 
-function createFighters(firstFighter, secondFighter) {
+function createFighters(firstFighter: fighterType, secondFighter: fighterType) {
   const battleField = createElement({ tagName: 'div', className: `arena___battlefield` });
   const firstFighterElement = createFighter(firstFighter, 'left');
   const secondFighterElement = createFighter(secondFighter, 'right');
@@ -56,7 +57,7 @@ function createFighters(firstFighter, secondFighter) {
   return battleField;
 }
 
-function createFighter(fighter, position) {
+function createFighter(fighter: fighterType, position: 'left' | 'right') {
   const imgElement = createFighterImage(fighter);
   const positionClassName = position === 'right' ? 'arena___right-fighter' : 'arena___left-fighter';
   const fighterElement = createElement({

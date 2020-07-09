@@ -1,26 +1,29 @@
+import { fighterType, twoFighters } from '../../../customTypes';
+import { fighterService } from './../services/fightersService';
 import { createElement } from '../helpers/domHelper';
 import { renderArena } from './arena';
-import versusImg from '../../../resources/versus.png';
 import { createFighterPreview } from './fighterPreview';
-import {fighterService} from '../services/fightersService';
+import versusImg from './../../../resources/versus.png';
+
 
 export function createFightersSelector() {
-  let selectedFighters = [];
+  let selectedFighters: [fighterType?, fighterType?] = [];
 
-  return async (event, fighterId) => {
-    const fighter = await getFighterInfo(fighterId);
+  return async (_event: MouseEvent, fighterId: string) => {
+    const fighter = <fighterType>(await getFighterInfo(fighterId));
     const [playerOne, playerTwo] = selectedFighters;
     const firstFighter = playerOne ?? fighter;
-    const secondFighter = Boolean(playerOne) ? playerTwo ?? fighter : playerTwo;
+    const secondFighter = <fighterType>(Boolean(playerOne) ? playerTwo ?? fighter : playerTwo);
     selectedFighters = [firstFighter, secondFighter];
 
-    renderSelectedFighters(selectedFighters);
+    renderSelectedFighters(<twoFighters>selectedFighters);
   };
 }
 
-const fighterDetailsMap = new Map();
 
-export async function getFighterInfo(fighterId) {
+const fighterDetailsMap: Map<string, fighterType> = new Map();
+
+export async function getFighterInfo(fighterId: string) {
   try {
     return fighterDetailsMap.has(fighterId)
     ?  fighterDetailsMap.get(fighterId)
@@ -29,25 +32,26 @@ export async function getFighterInfo(fighterId) {
   catch(err) {
     alert(`Cannot get fighter info. Error:${err}. Please try later!`);
     location.reload();
+    return;
   }
 }
 
-function renderSelectedFighters(selectedFighters) {
-  const fightersPreview = document.querySelector('.preview-container___root');
+function renderSelectedFighters(selectedFighters: twoFighters) {
+  const fightersPreview = document.querySelector('.preview-container___root')!;
   const [playerOne, playerTwo] = selectedFighters;
-  const firstPreview = createFighterPreview(playerOne, 'left');
-  const secondPreview = createFighterPreview(playerTwo, 'right');
-  const versusBlock = createVersusBlock(selectedFighters);
+  const firstPreview: HTMLElement = createFighterPreview(playerOne, 'left');
+  const secondPreview: HTMLElement = createFighterPreview(playerTwo, 'right');
+  const versusBlock: HTMLElement = createVersusBlock(selectedFighters);
 
   fightersPreview.innerHTML = '';
   fightersPreview.append(firstPreview, versusBlock, secondPreview);
 }
 
-function createVersusBlock(selectedFighters) {
+function createVersusBlock(selectedFighters: twoFighters) {
   const canStartFight = selectedFighters.filter(Boolean).length === 2;
   const onClick = () => startFight(selectedFighters);
-  const container = createElement({ tagName: 'div', className: 'preview-container___versus-block' });
-  const image = createElement({
+  const container: HTMLElement = createElement({ tagName: 'div', className: 'preview-container___versus-block' });
+  const image: HTMLElement = createElement({
     tagName: 'img',
     className: 'preview-container___versus-img',
     attributes: { src: versusImg },
@@ -65,6 +69,6 @@ function createVersusBlock(selectedFighters) {
   return container;
 }
 
-function startFight(selectedFighters) {
+function startFight(selectedFighters: [fighterType, fighterType]) {
   renderArena(selectedFighters);
 }

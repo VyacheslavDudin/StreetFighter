@@ -1,7 +1,7 @@
+import { fighterType } from './../../../customTypes';
 import { createElement } from '../helpers/domHelper';
-import { fighters } from '../helpers/mockData';
 
-export function createFighterPreview(fighter, position) {
+export function createFighterPreview(fighter: fighterType, position: 'left' | 'right') {
   const positionClassName = position === 'right' ? 'fighter-preview___right' : 'fighter-preview___left';
   const fighterElement = createElement({
     tagName: 'div',
@@ -22,13 +22,10 @@ export function createFighterPreview(fighter, position) {
     fighterElement.appendChild(imgElement);
     fighterElement.appendChild(divFighterInfo);
   }
-  
-
-
   return fighterElement;
 }
 
-export function createFighterImage(fighter) {
+export function createFighterImage(fighter: fighterType) {
   const { source, name } = fighter;
   const attributes = { 
     src: source, 
@@ -40,6 +37,5 @@ export function createFighterImage(fighter) {
     className: 'fighter-preview___img',
     attributes,
   });
-
   return imgElement;
 }

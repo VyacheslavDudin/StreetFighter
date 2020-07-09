@@ -1,12 +1,13 @@
+import { fighterType } from './../../../customTypes';
 import { createElement } from '../helpers/domHelper';
 import { createFightersSelector } from './fighterSelector';
 
-export function createFighters(fighters) {
+export function createFighters(fighters: fighterType[]) {
   const selectFighter = createFightersSelector();
-  const container = createElement({ tagName: 'div', className: 'fighters___root' });
-  const preview = createElement({ tagName: 'div', className: 'preview-container___root' });
-  const fightersList = createElement({ tagName: 'div', className: 'fighters___list' });
-  const fighterElements = fighters.map((fighter) => createFighter(fighter, selectFighter));
+  const container: HTMLElement = createElement({ tagName: 'div', className: 'fighters___root' });
+  const preview: HTMLElement = createElement({ tagName: 'div', className: 'preview-container___root' });
+  const fightersList: HTMLElement = createElement({ tagName: 'div', className: 'fighters___list' });
+  const fighterElements: HTMLElement[] = fighters.map((fighter) => createFighter(fighter, selectFighter));
 
   fightersList.append(...fighterElements);
   container.append(preview, fightersList);
@@ -14,10 +15,10 @@ export function createFighters(fighters) {
   return container;
 }
 
-function createFighter(fighter, selectFighter) {
+function createFighter(fighter: fighterType, selectFighter: (event: MouseEvent, fighterId: string) => Promise<void> ) {
   const fighterElement = createElement({ tagName: 'div', className: 'fighters___fighter' });
   const imageElement = createImage(fighter);
-  const onClick = (event) => selectFighter(event, fighter._id);
+  const onClick = (event: MouseEvent) => selectFighter(event, fighter._id);
 
   fighterElement.append(imageElement);
   fighterElement.addEventListener('click', onClick, false);
@@ -25,7 +26,7 @@ function createFighter(fighter, selectFighter) {
   return fighterElement;
 }
 
-function createImage(fighter) {
+function createImage(fighter: fighterType) {
   const { source, name } = fighter;
   const attributes = { 
     src: source,
