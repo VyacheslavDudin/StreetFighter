@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Shojumaru&display=swap");
+
+.fighter-preview___root {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 250px;
+}
+
+.fighter-preview___right {
+  align-items: flex-end;
+}
+
+.fighter-preview___left {
+  align-items: flex-start;
+}
+
+.fighter-preview___root > .fighter-preview___img {
+  height: 275px;
+  width: 180px;
+}
+
+.fighter-preview___right .fighter-preview___img {
+  transform: scaleX(-1);
+}
+
+.fighter-preview___root  .fighter-preview__info {
+  display: flex;
+  flex-direction: column;
+  font-family: "Shojumaru", cursive;
+  color: aliceblue;
+}
